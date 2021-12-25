@@ -1,0 +1,5 @@
+server:
+  port: 5000
+
+app:
+  product-endpoint: http://localhost:3001/
