@@ -1,0 +1,5 @@
+app:
+  productEndpoints:
+    product-base-url: simulado/
+    similar-products: product/{productId}/similarids
+    product-details: product/{productId}
