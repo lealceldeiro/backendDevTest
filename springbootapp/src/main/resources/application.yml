@@ -1,5 +1,14 @@
+spring:
+  mvc:
+    async:
+      request-timeout: 300000
 server:
   port: 5000
 
 app:
-  product-endpoint: http://localhost:3001/
+  productEndpoints:
+    product-base-url: http://localhost:3001/
+    similar-products: product/{productId}/similarids
+    product-details: product/{productId}
+web:
+  connection-timeout: 60000
