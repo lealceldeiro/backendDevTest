@@ -1,11 +1,24 @@
 package lealceldeiro.springbootapp;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.mockito.Mockito.times;
 
-@SpringBootTest
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.SpringApplication;
+
 class SpringBootAppTest {
   @Test
-  void contextLoads() {
+  void applicationCanBeInstantiated() {
+    var application = new SpringBootApp();
+    Assertions.assertNotNull(application);
+  }
+
+  @Test
+  void applicationRunsSpringRunner() {
+    try (var mockedSpringApplication = Mockito.mockStatic(SpringApplication.class)) {
+      SpringBootApp.main(new String[0]);
+      mockedSpringApplication.verify(() -> SpringApplication.run(SpringBootApp.class), times(1));
+    }
   }
 }

@@ -14,7 +14,7 @@ public class ProductController {
   private final ProductService productService;
 
   @GetMapping("/{productId}/similar")
-  public Flux<ProductDto> getSimilar(@PathVariable String productId) {
+  public Flux<ProductDto> getSimilar(@PathVariable Integer productId) {
     return productService.getSimilarProducts(productId);
   }
 }
