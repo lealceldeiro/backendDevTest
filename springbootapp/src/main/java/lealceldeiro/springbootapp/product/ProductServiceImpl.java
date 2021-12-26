@@ -1,10 +1,12 @@
 package lealceldeiro.springbootapp.product;
 
 import lealceldeiro.springbootapp.config.AppConf;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
   private final WebClient webClient;
@@ -14,19 +16,38 @@ public class ProductServiceImpl implements ProductService {
 
   public ProductServiceImpl(AppConf appConf, WebClient webClient) {
     this.webClient = webClient;
-    similarIdsUrl = appConf.getProductEndpoint() + "product/{productId}/similarids";
-    productDetailsUrl = appConf.getProductEndpoint() + "product/{productId}";
+
+    String productBaseUrl = appConf.urlFor(AppConf.Endpoint.PRODUCT_BASE_URL);
+    similarIdsUrl = productBaseUrl + appConf.urlFor(AppConf.Endpoint.SIMILAR_PRODUCTS);
+    productDetailsUrl = productBaseUrl + appConf.urlFor(AppConf.Endpoint.PRODUCT_DETAILS);
   }
 
   public Flux<ProductDto> getSimilarProducts(String productId) {
+    Flux<Integer> similarProductIds = getSimilarProductIds(productId);
+
+    return getProductDetails(similarProductIds);
+  }
+
+  private Flux<Integer> getSimilarProductIds(String productId) {
     return webClient.get()
                     .uri(similarIdsUrl, productId)
                     .retrieve()
                     .bodyToMono(Integer[].class)
                     .flatMapMany(Flux::fromArray)
-                    .flatMap(similarProductId -> webClient.get()
-                                                          .uri(productDetailsUrl, similarProductId)
-                                                          .retrieve()
-                                                          .bodyToFlux(ProductDto.class));
+                    .onErrorResume(e -> {
+                      log.error("Fetch similar ids for product ({}) errored:", productId, e);
+                      return Flux.empty();
+                    });
+  }
+
+  private Flux<ProductDto> getProductDetails(Flux<Integer> productIds) {
+    return productIds.flatMap(id -> webClient.get()
+                                             .uri(productDetailsUrl, id)
+                                             .retrieve()
+                                             .bodyToFlux(ProductDto.class)
+                                             .onErrorResume(e -> {
+                                               log.error("Fetch product id {} errored:", id, e);
+                                               return Flux.empty();
+                                             }));
   }
 }
