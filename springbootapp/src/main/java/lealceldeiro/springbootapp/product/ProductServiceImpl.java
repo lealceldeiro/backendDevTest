@@ -42,17 +42,13 @@ public class ProductServiceImpl implements ProductService {
                     .onErrorResume(this::handleNotFoundException);
   }
 
-  private <T> Publisher<? extends T> handleNotFoundException(Throwable err) {
-    log.error("Error while fetch similar ids", err);
+  private <T> Publisher<? extends T> handleNotFoundException(Throwable e) {
+    log.error("Error while fetch similar ids", e);
 
-    if (WebClientResponseException.class.isAssignableFrom(err.getClass())) {
-      var ex = (WebClientResponseException) err;
-      if (HttpStatus.NOT_FOUND == ex.getStatusCode()) {
-        return Mono.error(new NotFoundException());
-      }
-    }
+    boolean isNotFound = WebClientResponseException.class.isAssignableFrom(e.getClass()) &&
+                         HttpStatus.NOT_FOUND == ((WebClientResponseException) e).getStatusCode();
 
-    return Flux.empty();
+    return isNotFound ? Mono.error(new NotFoundException()) : Flux.empty();
   }
 
   private Flux<ProductDto> getProductDetails(Flux<Integer> productIds) {
