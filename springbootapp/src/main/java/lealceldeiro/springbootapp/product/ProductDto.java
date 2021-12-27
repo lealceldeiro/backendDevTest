@@ -16,7 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ProductDto {
   @EqualsAndHashCode.Include
-  private int id;
+  private String id;
   private String name;
   private BigDecimal price;
   private boolean availability;

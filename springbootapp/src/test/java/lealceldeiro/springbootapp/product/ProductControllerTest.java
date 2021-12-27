@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import reactor.core.publisher.Flux;
@@ -28,15 +29,22 @@ class ProductControllerTest {
   private MockMvc mockMvc;
 
   @Test
-  void getSimilarReturnsOK() throws Exception {
+  void getSimilarReturnsOK() {
     var random = new SecureRandom();
-    var sampleDto = new ProductDto(random.nextInt(), TestUtil.randomString(),
+    var id = String.valueOf(random.nextInt());
+    var sampleDto = new ProductDto(id, TestUtil.randomString(),
                                    new BigDecimal(random.nextInt()), random.nextBoolean());
-    var id = String.valueOf(sampleDto.getId());
-    when(productService.getSimilarProducts(id)).thenReturn(Flux.just());
+    when(productService.getSimilarProducts(id)).thenReturn(Flux.just(sampleDto));
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/product/{productId}/similar", id))
-           .andExpect(status().isOk());
+    var webTestClient = WebTestClient.bindToController(new ProductController(productService))
+                                     .configureClient()
+                                     .baseUrl("/product")
+                                     .build();
+    webTestClient.get()
+                 .uri("/{productId}/similar", id)
+                 .exchange()
+                 .expectStatus().isOk()
+                 .expectBodyList(ProductDto.class).contains(sampleDto);
   }
 
   @Test

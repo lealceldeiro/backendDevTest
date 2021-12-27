@@ -44,9 +44,9 @@ class ProductServiceImplTest {
     var random = new SecureRandom();
 
     var dto1 = new ProductDto();
-    dto1.setId(random.nextInt());
+    dto1.setId(String.valueOf(random.nextInt()));
     var dto2 = new ProductDto();
-    dto2.setId(random.nextInt());
+    dto2.setId(String.valueOf(random.nextInt()));
 
     Integer[] similarIds = {random.nextInt(), random.nextInt()};
     ProductDto[] dtoValues = {dto1, dto2};

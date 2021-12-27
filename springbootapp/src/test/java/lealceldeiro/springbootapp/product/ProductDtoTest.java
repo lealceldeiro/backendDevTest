@@ -19,7 +19,7 @@ class ProductDtoTest {
   void testDtoAccessors() {
     var random = new SecureRandom();
 
-    var id = random.nextInt();
+    var id = String.valueOf(random.nextInt());
     var name = TestUtil.randomString();
     var price = new BigDecimal(random.nextInt());
     var availability = random.nextBoolean();
@@ -39,7 +39,7 @@ class ProductDtoTest {
   private static Stream<Arguments> testEqualsAndHashCodeArgs() {
     var random = new SecureRandom();
 
-    var id = random.nextInt();
+    var id = String.valueOf(random.nextInt());
     var name = TestUtil.randomString();
     var price = new BigDecimal(random.nextInt());
     var availability = random.nextBoolean();
@@ -72,7 +72,7 @@ class ProductDtoTest {
   void dtoToStringShowsProperties() {
     var random = new SecureRandom();
 
-    var id = random.nextInt();
+    var id = String.valueOf(random.nextInt());
     var name = TestUtil.randomString();
     var price = new BigDecimal(random.nextInt());
     var availability = random.nextBoolean();
