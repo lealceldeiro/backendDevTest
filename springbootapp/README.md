@@ -29,7 +29,7 @@ docker-compose up -d --build springbootapp simulado influxdb grafana
 Docs: https://docs.docker.com/compose/reference/up/
 
 ### Hit the app endpoint
-The following endpoint can be hit using tools such as Postman, cURL, or any other that allow it.
+The following endpoint can be hit using tools such as Postman, cURL, or any other that allows it.
 
 Example:
 ```http request
