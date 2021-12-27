@@ -24,13 +24,13 @@ public class ProductServiceImpl implements ProductService {
     productDetailsUrl = productBaseUrl + appConf.urlFor(AppConf.Endpoint.PRODUCT_DETAILS);
   }
 
-  public Flux<ProductDto> getSimilarProducts(Integer productId) {
+  public Flux<ProductDto> getSimilarProducts(String productId) {
     Flux<Integer> similarProductIds = getSimilarProductIds(productId);
 
     return getProductDetails(similarProductIds);
   }
 
-  private Flux<Integer> getSimilarProductIds(Integer productId) {
+  private Flux<Integer> getSimilarProductIds(String productId) {
     return webClient.get()
                     .uri(similarIdsUrl, productId)
                     .retrieve()

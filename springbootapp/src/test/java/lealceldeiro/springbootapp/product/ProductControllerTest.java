@@ -32,9 +32,10 @@ class ProductControllerTest {
     var random = new SecureRandom();
     var sampleDto = new ProductDto(random.nextInt(), TestUtil.randomString(),
                                    new BigDecimal(random.nextInt()), random.nextBoolean());
-    when(productService.getSimilarProducts(sampleDto.getId())).thenReturn(Flux.just());
+    var id = String.valueOf(sampleDto.getId());
+    when(productService.getSimilarProducts(id)).thenReturn(Flux.just());
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/product/{productId}/similar", sampleDto.getId()))
+    mockMvc.perform(MockMvcRequestBuilders.get("/product/{productId}/similar", id))
            .andExpect(status().isOk());
   }
 

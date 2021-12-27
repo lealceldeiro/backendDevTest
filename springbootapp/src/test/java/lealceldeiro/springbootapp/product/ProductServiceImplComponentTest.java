@@ -13,7 +13,7 @@ class ProductServiceImplComponentTest {
 
   @Test
   void getSimilarProductsReturnsNotFound() {
-    var flux = productService.getSimilarProducts(Integer.MAX_VALUE);
+    var flux = productService.getSimilarProducts(String.valueOf(Integer.MAX_VALUE));
     Assertions.assertThrows(NotFoundException.class, flux::blockFirst);
   }
 }

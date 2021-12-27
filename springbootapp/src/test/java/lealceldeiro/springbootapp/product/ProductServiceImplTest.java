@@ -50,7 +50,7 @@ class ProductServiceImplTest {
 
     Integer[] similarIds = {random.nextInt(), random.nextInt()};
     ProductDto[] dtoValues = {dto1, dto2};
-    var productId = random.nextInt();
+    var productId = String.valueOf(random.nextInt());
 
     var similarResponseSpecMock = mock(WebClient.ResponseSpec.class);
     when(similarResponseSpecMock.bodyToMono(Integer[].class)).thenReturn(Mono.just(similarIds));
